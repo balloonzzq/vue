@@ -1,6 +1,6 @@
 <template>
   <div class="star" :class="starType">
-    <span v-for="itemClass in itemClasses" :class="itemClass" class="star-item" track-by="$index"></span>
+    <span v-for="itemClass in itemClasses" class="star-item" track-by="$index" :class="itemClass"></span>
   </div>
 </template>
 
@@ -36,7 +36,7 @@
         }
         while (result.length < LENGTH) {
           result.push(CLS_OFF);
-        }
+        };
         return result;
       }
     }
@@ -45,7 +45,6 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin.styl"
-
   .star
     font-size: 0
     .star-item
@@ -69,7 +68,7 @@
       .star-item
         width: 15px
         height: 15px
-        margin-right: 6px
+        margin-right: 16px
         background-size: 15px 15px
         &:last-child
           margin-right: 0
