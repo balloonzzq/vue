@@ -6,7 +6,8 @@
 </head>
 <body>
 	<div id="app">
-		<message content="hello world"></message>
+		<button @click="alertMessage">alertMessage</button>
+		<message ref="message" content="hello world"></message>
 	</div>
 	<div id="app2">
 		<h1>{{message2}}</h1>
@@ -64,6 +65,12 @@
 		<p>{{ lastName }}</p>
 		<p>{{ fullName }}</p>
 		<button v-on:click="_console">console</button>
+		<!-- 内联方式 -->
+		<button @click.stop="sayFrom ('from first')">内联方式</button>
+		<!-- 获取原生事件对象 -->
+		<button @click.prevent="showEvent($event)">获取原生事件对象</button>
+		<!-- 按键修饰符 -->
+		<input v-on:keyup.13="sayFrom ('keyup')" >
 	</div>
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 	<script>
@@ -73,7 +80,12 @@
 		});
 		Vue.component('message', Message);
 		var vm = new Vue({
-			el: "#app"
+			el: "#app",
+			methods: {
+				alertMessage: function () {
+					console.log('alertMessage', this.$refs);
+				}
+			}
 		});
 		var vm2 = new Vue({
 			el: "#app2",
@@ -112,6 +124,12 @@
 			methods: {
 				_console: function(e) {
 					console.log('btn', this.message2);
+				},
+				sayFrom: function (from) {
+					console.log('sayFrom + from', from );
+				},
+				showEvent: function (event) {
+					console.log('showEvent', event, event.target);
 				}
 			},
 			created: function () {
