@@ -4,13 +4,25 @@
 	<meta charset="UTF-8">
 	<title>vue</title>
 </head>
+<style type="text/css">
+	.show-transition {
+		transition: all 1s ease;
+		width: 100px;
+		height: 100px;
+		background: black;
+		opacity: 1;
+	}
+	.show-enter, .show-leave{  height: 0px;
+ opacity: 0;
+}
+</style>
 <body>
 	<div id="app">
 		<button @click="alertMessage">alertMessage</button>
 		<message ref="message" content="hello world"></message>
 	</div>
 	<div id="app2">
-		<h1>{{message2}}</h1>
+		<h1>{{message2 | toUpper}}</h1>
 		<input type="text" v-model="message2" />
 		<label><input type="radio" value="male" v-model="gender">male</label>
 		<label><input type="radio" value="female" v-model="gender">female</label>
@@ -19,6 +31,7 @@
 		<label><input type="checkbox" value="1" v-model=" multiChecked">1</lable>
 		<label><input type="checkbox" value="2" v-model=" multiChecked">2</lable>
 		<label><input type="checkbox" value="3" v-model=" multiChecked">3</lable>
+
 		<p>MultiChecked: {{ multiChecked.join('|') }}</p>
 
 		<select v-model="selected">
@@ -30,11 +43,16 @@
 
 		<select v-model="multiSelected" multiple>
 			<option>A</option>
-		<option>B</option>
+			<option>B</option>
 			<option>C</option>
 		</select>
 		<br>
 		<span>MultiSelected: {{ multiSelected.join('|') }}</span>
+
+		<!-- transition -->
+		<transition name="show">
+		  <div v-if="show" style="border: 1px solide pink;"></div>
+		</transition>
 
 		<!-- 绑定value -->
 		<input type="checkbox" v-model="checked" :true-value="a" :false-value="b"/>
@@ -45,8 +63,8 @@
 		  <option v-bind:value="{ number: 234 }">234</option>
 		</select>
 
-		<input v-model.lazy="query" />
-		<p>query: {{query}}</p>
+		<input v-model="query" placeholder="query"/>
+		<p v-my-directive="query">query: {{query | toUpper}}</p>
 
 		<input v-model.number="age" placeholder="age"/>
 		<p>age: {{age}}</p>
@@ -74,6 +92,29 @@
 	</div>
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 	<script>
+		Vue.filter('toUpper', function (value) {
+				value.toUpperCase()
+		})
+		Vue.directive('my-directive', {
+			params : ['a'],
+			bind: function () {
+				console.log('directive-bind', arguments)
+				console.log('params', this.params);
+				console.log('~~~~~~~~~~~bind~~~~~~~~~~~~~');
+			},
+			inserted: function () {
+				console.log('directive-inserted', arguments)
+			},
+			update: function () {
+				console.log('directive-update', arguments)
+			},
+			componentUpdated: function () {
+				console.log('directive-componentUpdated', arguments)
+			},
+			unbind: function () {
+				console.log('directive-unbind', arguments)
+			}
+		})
 		var Message = Vue.extend({
 			props: ['content'],
 			template: '<h1>{{content}}</h1>'
@@ -104,6 +145,7 @@
 				selectedObj: '',
 				query: "",
 				age: '',
+				show: false,
 				items : [
 				    { title : 'title-1', description : 'description-1'},
 				    { title : 'title-2', description : 'description-2'}   ],
